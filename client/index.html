@@ -7,11 +7,25 @@
 
     <!-- dependencies -->
     <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
     <!-- your scripts -->
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
   </head>
   <body>
+    <!--create a button -->
+    <button id="update">Update My Messages!</button>
+    <form name="my_form" id="myform">
+      Message<br>
+      <br><span>Pick Your Chat Room: </span><select class="chatroom" name= "allchatrooms"></select></br>
+      <input  class="username" type="text" name="username" placeholder="username">
+      <br>
+      <input  class="message" type="text" name="message" placeholder="message">
+      <br>
+      <input  class="userchat" type="text" name="userchat" placeholder="add new chatroom">
+      <br>
+      <button class="submitMessage">Submit</button>
+    </form>
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
