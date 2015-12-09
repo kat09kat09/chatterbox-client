@@ -1,13 +1,36 @@
 var users= {};
 
+//get the current user
+var storedUser= window.location.search;
+storedUser= storedUser.replace(/\?username\=/, ""); 
 
+if(users[storedUser]===undefined) {
+          users[storedUser]=[]; 
+}
+
+
+var addFriend =function(){
+        console.log('this works'); 
+   
+        //get the friend
+        var friend= this.innerHTML; 
+        console.log('friend', friend); 
+      
+
+        if(users[storedUser].indexOf(friend) === -1) {
+          users[storedUser].push(friend); 
+        }
+
+        console.log('who have we friended', users); 
+
+        return false; 
+    
+};
 
 $(document).ready(function() {
 
-
-
-//grab most recent 100 -- parse api doc
-var getData = function () {
+  //grab most recent 100 -- parse api doc
+  var getData = function () {
   
     $.ajax({
     // This is the url you should use to communicate with the parse API server.
@@ -48,9 +71,18 @@ var getData = function () {
           return escaped;
          };   
 
+         //check if username is current user
+         if(users[storedUser].indexOf(username) !== -1){
+          console.log('bolded '); 
+          $('#main').append('<p><a href="javascript:;" onclick="addFriend.call(this)" class="pickFriend">' + escapeHtml(username) + "</a> " + ":" + " " + "<b>" + escapeHtml(message) + "</b>" + '</p>');
+         } else {
+          console.log('not bolded'); 
+          //just append checked value to the page
+           $('#main').append('<p><a href="javascript:;" onclick="addFriend.call(this)" class="pickFriend">' + escapeHtml(username) + "</a> " + ":" + " " + escapeHtml(message) + '</p>');
+         }
 
-        //append checked value to the page
-        $('#main').append('<p><a href="" class="pickFriend">' + escapeHtml(username) + "</a> " + ":" + " " + escapeHtml(message) + '</p>');
+        // //append checked value to the page
+        // $('#main').append('<p><a href="javascript:;" onclick="addFriend.call(this)" class="pickFriend">' + escapeHtml(username) + "</a> " + ":" + " " + escapeHtml(message) + '</p>');
 
         
         //set apart the room messages
@@ -70,16 +102,23 @@ var getData = function () {
       console.log('rooms', rooms); 
      $('.chatroom').change(function(){
         var selectedRoom = $('.chatroom option:selected').val();
-
+        var username;
+        var message;
         //empty out the child elements of #main (messages)
         $('#main').empty();
         //filter the dataResults by the "selected room"
         for(var i = 0; i < dataResults.length; i++){
-          if(dataResults[i].roomname === selectedRoom){
-            $('#main').append('<p><a href="" class="pickFriend">' + escapeHtml(dataResults[i].username) + "</a> " + ":" + " " + escapeHtml(dataResults[i].text) + '</p>');
-          }
+          username = dataResults[i].username;
+          message = dataResults[i].text;
+          
+           //check if username is current user
+           if(users[storedUser].indexOf(username) !== -1){
+            $('#main').append('<p><a href="javascript:;" onclick="addFriend.call(this)" class="pickFriend">' + escapeHtml(username) + "</a> " + ":" + " " + "<b>" + escapeHtml(message) + "</b>" + '</p>');
+           } else {
+            //just append checked value to the page
+             $('#main').append('<p><a href="javascript:;" onclick="addFriend.call(this)" class="pickFriend">' + escapeHtml(username) + "</a> " + ":" + " " + escapeHtml(message) + '</p>');
+           }
         }
-
      });
     
   },
@@ -150,18 +189,8 @@ var getData = function () {
     // return false;
   }); 
 
-  $('.pickFriend').on('click', function(){
-    //who is the user clicker?
-    console.log('friend', $(this).val()); 
-    var storedUser= window.location.search;
-
-    storedUser= storedUser.replace(/\?username\=/, "");  
-   
-    users[storedUser]= 
-
-    //see if the clicked username's friends list contains user clicker
-  });
-  // $('.chatroom').change(function(){
+ 
+  // $('#main p a').on('click',function(){
   //       var selectedRoom = $('.chatroom option:selected').val();
   // });
 
